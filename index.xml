@@ -2,28 +2,9 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>lysoul的博客空间</title>
-    <link>https://lysoul147.github.io/</link>
+    <link>lysoul147.github.io/</link>
     <description>Recent content on lysoul的博客空间</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Thu, 10 Nov 2022 20:51:18 +0800</lastBuildDate><atom:link href="https://lysoul147.github.io/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Sec</title>
-      <link>https://lysoul147.github.io/post/sec/</link>
-      <pubDate>Thu, 10 Nov 2022 20:51:18 +0800</pubDate>
-      
-      <guid>https://lysoul147.github.io/post/sec/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>First Post</title>
-      <link>https://lysoul147.github.io/post/first-post/</link>
-      <pubDate>Thu, 10 Nov 2022 20:48:52 +0800</pubDate>
-      
-      <guid>https://lysoul147.github.io/post/first-post/</guid>
-      <description></description>
-    </item>
-    
+    <language>en-us</language><atom:link href="lysoul147.github.io/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
