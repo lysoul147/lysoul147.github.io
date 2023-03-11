@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>lysoul147.github.io/categories/</loc>
-  </url><url>
     <loc>lysoul147.github.io/</loc>
+    <lastmod>2023-03-11T15:30:32+08:00</lastmod>
+  </url><url>
+    <loc>lysoul147.github.io/post/</loc>
+    <lastmod>2023-03-11T15:30:32+08:00</lastmod>
+  </url><url>
+    <loc>lysoul147.github.io/post/%E5%8D%9A%E5%AE%A2%E6%98%AF%E4%B8%80%E7%A7%8D%E4%BF%AE%E8%A1%8C/</loc>
+    <lastmod>2023-03-11T15:30:32+08:00</lastmod>
+  </url><url>
+    <loc>lysoul147.github.io/categories/</loc>
   </url><url>
     <loc>lysoul147.github.io/tags/</loc>
   </url>
