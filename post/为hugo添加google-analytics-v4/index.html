@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>为Hugo添加Google Analytics V4 | lysoul</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">    
+<meta name="viewport" content="width=device-width,minimum-scale=1">
+<meta name="description" content="Google Analytics 是一款由 Google 开发的免费网站分析工具，可以提供关于网站访问者的详细信息，包括他们的地理位置、使用的设备、网站访问来源、网站流量、用户行为等等">
+<meta name="generator" content="Hugo 0.111.2">
+
+
+  <META NAME="ROBOTS" CONTENT="INDEX, FOLLOW">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+
+ 
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1KF5Z02B33"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-1KF5Z02B33');
+</script>
+
+
+
+
+
+
+  </head>
+
+  <body>
+    <nav class="navigation">
+	
+		<a href="/"> <span class="arrow">←</span>Home</a>
+	
+	<a href="/posts">Archive</a>
+	<a href="/tags">Tags</a>
+	<a href="/about">About</a>
+
+	
+
+	
+	  <a class="button" href="https://blog.lysoul.art/index.xml">Subscribe</a>
+	
+</nav>
+
+
+    <main class="main">
+      
+
+<section id="single">
+    <h1 class="title">为Hugo添加Google Analytics V4</h1>
+
+    <div class="tip">
+        <time datetime="2023-03-14 23:09:01 &#43;0800 CST">Mar 14, 2023</time>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          839 words
+        </span>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          2 minute read
+        </span>
+    </div>
+
+    
+    
+        
+  
+    <aside class="toc">
+      <details>
+          <summary>Table of Contents
+          </summary>
+          <div>
+              <nav id="TableOfContents">
+  <ul>
+    <li><a href="#创建google-analytics服务">创建Google Analytics服务</a></li>
+    <li><a href="#配置hugo">配置Hugo</a>
+      <ul>
+        <li><a href="#1-修改hugo配置文件">1. 修改hugo配置文件</a></li>
+        <li><a href="#2-建立google_analytics_asynchtml文件">2. 建立google_analytics_async.html文件</a></li>
+        <li><a href="#3-新建一个partials模板">3. 新建一个partials模板</a></li>
+      </ul>
+    </li>
+    <li><a href="#渲染网页">渲染网页</a></li>
+    <li><a href="#参考资料">参考资料</a></li>
+  </ul>
+</nav>
+          </div>
+      </details>
+    </aside>
+  
+
+
+    
+
+
+    <div class="content">
+      <p>Google Analytics 是一款由 Google 开发的免费网站分析工具，可以提供关于网站访问者的详细信息，包括他们的地理位置、使用的设备、网站访问来源、网站流量、用户行为等等。虽然官方提供的部署方式很简单，但实际操作的过程中也踩了不少坑，于是记录分享一下我的操作经验。</p>
+<h2 id="创建google-analytics服务">创建Google Analytics服务 <a href="#%e5%88%9b%e5%bb%bagoogle-analytics%e6%9c%8d%e5%8a%a1" class="anchor">🔗</a></h2><p>打开<a href="https://analytics.google.com/" target="_blank" rel="noopener">Google Analytics</a>，完成登录，根据网页提示完成服务的创建，步骤略过，在数据流页面，点开自己创建的数据流，点击查看代码说明，获得官方给出的插入代码，示例如下：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span><span style="color:#080;font-style:italic">&lt;!-- Google tag (gtag.js) --&gt;</span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#008000;font-weight:bold">script</span> <span style="color:#b44">async</span> <span style="color:#b44">src</span><span style="color:#666">=</span><span style="color:#b44">&#34;https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXX&#34;</span>&gt;&lt;/<span style="color:#008000;font-weight:bold">script</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#008000;font-weight:bold">script</span>&gt;
+</span></span><span style="display:flex;"><span>  <span style="color:#a2f">window</span>.dataLayer <span style="color:#666">=</span> <span style="color:#a2f">window</span>.dataLayer <span style="color:#666">||</span> [];
+</span></span><span style="display:flex;"><span>  <span style="color:#a2f;font-weight:bold">function</span> gtag(){dataLayer.push(arguments);}
+</span></span><span style="display:flex;"><span>  gtag(<span style="color:#b44">&#39;js&#39;</span>, <span style="color:#a2f;font-weight:bold">new</span> <span style="color:#a2f">Date</span>());
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  gtag(<span style="color:#b44">&#39;config&#39;</span>, <span style="color:#b44">&#39;G-XXXXXXXX&#39;</span>);
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#008000;font-weight:bold">script</span>&gt;
+</span></span></code></pre></div><p>其中<code>G-XXXXXXXX</code>为你的衡量ID</p>
+<h2 id="配置hugo">配置Hugo <a href="#%e9%85%8d%e7%bd%aehugo" class="anchor">🔗</a></h2><p>我们需要让hugo渲染网页时在 html 的 head 标签中插入上述代码，要实现这点，需要做到以下三个操作</p>
+<h3 id="1-修改hugo配置文件">1. 修改hugo配置文件 <a href="#1-%e4%bf%ae%e6%94%b9hugo%e9%85%8d%e7%bd%ae%e6%96%87%e4%bb%b6" class="anchor">🔗</a></h3><p>修改你的网站项目下的 config.yaml 配置文件，也有可能你的 config 配置是其他文件格式类型，但道理是一样的，此处以yaml格式为例：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#080;font-style:italic">#改为你的衡量ID，如果你按本教程的方式添加GA V4，则此项非必须项</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">googleAnalytics</span>:<span style="color:#bbb"> </span>G-1KF5Z02B33<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#080;font-style:italic">#找到params，在下方建立enableGoogleAnalytics这个参数并将值设为true，此项为必须项</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#008000;font-weight:bold">params</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#008000;font-weight:bold">enableGoogleAnalytics</span>:<span style="color:#bbb"> </span><span style="color:#a2f;font-weight:bold">true</span><span style="color:#bbb">
+</span></span></span></code></pre></div><aside>
+💡 如果你不用GA V4版本，则修改config就可以自动添加v3版本的GA，但要实现V4版本，则还需要接下来的步骤。
+</aside>
+<h3 id="2-建立google_analytics_asynchtml文件">2. 建立google_analytics_async.html文件 <a href="#2-%e5%bb%ba%e7%ab%8bgoogle_analytics_asynchtml%e6%96%87%e4%bb%b6" class="anchor">🔗</a></h3><p>在网站项目根目录下的<code>layouts/_internal</code>文件夹中，建立<code>google_analytics_async.html</code>文件，如果没有这个路径则自行新建文件夹，将上述的 Google Analytics 代码粘贴其中（注意修改为你的 衡量ID）：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span><span style="color:#080;font-style:italic">&lt;!-- Google tag (gtag.js) --&gt;</span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#008000;font-weight:bold">script</span> <span style="color:#b44">async</span> <span style="color:#b44">src</span><span style="color:#666">=</span><span style="color:#b44">&#34;https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXX&#34;</span>&gt;&lt;/<span style="color:#008000;font-weight:bold">script</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#008000;font-weight:bold">script</span>&gt;
+</span></span><span style="display:flex;"><span>  <span style="color:#a2f">window</span>.dataLayer <span style="color:#666">=</span> <span style="color:#a2f">window</span>.dataLayer <span style="color:#666">||</span> [];
+</span></span><span style="display:flex;"><span>  <span style="color:#a2f;font-weight:bold">function</span> gtag(){dataLayer.push(arguments);}
+</span></span><span style="display:flex;"><span>  gtag(<span style="color:#b44">&#39;js&#39;</span>, <span style="color:#a2f;font-weight:bold">new</span> <span style="color:#a2f">Date</span>());
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  gtag(<span style="color:#b44">&#39;config&#39;</span>, <span style="color:#b44">&#39;G-XXXXXXXX&#39;</span>);
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#008000;font-weight:bold">script</span>&gt;
+</span></span></code></pre></div><h3 id="3-新建一个partials模板">3. 新建一个partials模板 <a href="#3-%e6%96%b0%e5%bb%ba%e4%b8%80%e4%b8%aapartials%e6%a8%a1%e6%9d%bf" class="anchor">🔗</a></h3><p>在<code>layouts/partials/head/</code>下新建一个<code>head.html</code>文件，粘贴如下代码：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>{{- if not .Site.IsServer }}
+</span></span><span style="display:flex;"><span>    {{ template &#34;_internal/google_analytics_async.html&#34; . }}
+</span></span><span style="display:flex;"><span>{{- end }}
+</span></span></code></pre></div><h2 id="渲染网页">渲染网页 <a href="#%e6%b8%b2%e6%9f%93%e7%bd%91%e9%a1%b5" class="anchor">🔗</a></h2><p>运行hugo渲染网页，可以看到渲染出来的html文件中的 head 标签下已经嵌入了 Google Analytics的代码。</p>
+<h2 id="参考资料">参考资料 <a href="#%e5%8f%82%e8%80%83%e8%b5%84%e6%96%99" class="anchor">🔗</a></h2><p><a href="https://immwind.com/google-analytics-for-hugo/" target="_blank" rel="noopener">为 Hugo 配置 Google Analytics</a></p>
+
+    </div>
+
+    
+    
+    
+
+</section>
+
+
+    </main>
+    
+    <footer id="footer">
+    
+        <div id="social">
+
+
+    <a class="symbol" href="lysoul147.github.com" rel="me" target="_blank">
+        
+        <svg fill="#bbbbbb" width="28" height="28"  viewBox="0 0 72 72" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    
+    <title>Github</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Social-Icons---Rounded-Black" transform="translate(-264.000000, -939.000000)">
+            <g id="Github" transform="translate(264.000000, 939.000000)">
+                <path d="M8,72 L64,72 C68.418278,72 72,68.418278 72,64 L72,8 C72,3.581722 68.418278,-8.11624501e-16 64,0 L8,0 C3.581722,8.11624501e-16 -5.41083001e-16,3.581722 0,8 L0,64 C5.41083001e-16,68.418278 3.581722,72 8,72 Z" id="Rounded" fill="#bbbbbb"></path>
+                <path d="M35.9985,13 C22.746,13 12,23.7870921 12,37.096644 C12,47.7406712 18.876,56.7718301 28.4145,59.9584121 C29.6145,60.1797862 30.0525,59.4358488 30.0525,58.7973276 C30.0525,58.2250681 30.0315,56.7100863 30.0195,54.6996482 C23.343,56.1558981 21.9345,51.4693938 21.9345,51.4693938 C20.844,48.6864054 19.2705,47.9454799 19.2705,47.9454799 C17.091,46.4500754 19.4355,46.4801943 19.4355,46.4801943 C21.843,46.6503662 23.1105,48.9634994 23.1105,48.9634994 C25.2525,52.6455377 28.728,51.5823398 30.096,50.9649018 C30.3135,49.4077535 30.9345,48.3460615 31.62,47.7436831 C26.2905,47.1352808 20.688,45.0691228 20.688,35.8361671 C20.688,33.2052792 21.6225,31.0547881 23.1585,29.3696344 C22.911,28.7597262 22.0875,26.3110578 23.3925,22.9934585 C23.3925,22.9934585 25.4085,22.3459017 29.9925,25.4632101 C31.908,24.9285993 33.96,24.6620468 36.0015,24.6515052 C38.04,24.6620468 40.0935,24.9285993 42.0105,25.4632101 C46.5915,22.3459017 48.603,22.9934585 48.603,22.9934585 C49.9125,26.3110578 49.089,28.7597262 48.8415,29.3696344 C50.3805,31.0547881 51.309,33.2052792 51.309,35.8361671 C51.309,45.0917119 45.6975,47.1292571 40.3515,47.7256117 C41.2125,48.4695491 41.9805,49.9393525 41.9805,52.1877301 C41.9805,55.4089489 41.9505,58.0067059 41.9505,58.7973276 C41.9505,59.4418726 42.3825,60.1918338 43.6005,59.9554002 C53.13,56.7627944 60,47.7376593 60,37.096644 C60,23.7870921 49.254,13 35.9985,13" fill="#FFFFFF"></path>
+            </g>
+        </g>
+    </g>
+</svg>
+    </a>
+
+
+</div>
+
+    
+
+    <div class="copyright">
+    
+       © Copyright 
+       2023 
+       <span class="split">
+        <svg fill="#bbbbbb" width="15" height="15" version="1.1" id="heart-15" xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 15 15">
+  <path d="M13.91,6.75c-1.17,2.25-4.3,5.31-6.07,6.94c-0.1903,0.1718-0.4797,0.1718-0.67,0C5.39,12.06,2.26,9,1.09,6.75&#xA;&#x9;C-1.48,1.8,5-1.5,7.5,3.45C10-1.5,16.48,1.8,13.91,6.75z"/>
+</svg>
+       </span>
+       lysoul
+    
+    </div>
+
+    
+      <div class="powerby">
+        Powered by <a href='http://www.gohugo.io/'>Hugo</a> Theme By <a href='https://github.com/nodejh/hugo-theme-mini'>nodejh</a>
+      </div>
+    
+</footer>
+
+
+
+  </body>
+</html>

@@ -6,7 +6,16 @@
     <description>Recent content on lysoul</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 11 Mar 2023 20:07:15 +0800</lastBuildDate><atom:link href="https://blog.lysoul.art/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 14 Mar 2023 23:09:01 +0800</lastBuildDate><atom:link href="https://blog.lysoul.art/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>为Hugo添加Google Analytics V4</title>
+      <link>https://blog.lysoul.art/post/%E4%B8%BAhugo%E6%B7%BB%E5%8A%A0google-analytics-v4/</link>
+      <pubDate>Tue, 14 Mar 2023 23:09:01 +0800</pubDate>
+      
+      <guid>https://blog.lysoul.art/post/%E4%B8%BAhugo%E6%B7%BB%E5%8A%A0google-analytics-v4/</guid>
+      <description>Google Analytics 是一款由 Google 开发的免费网站分析工具，可以提供关于网站访问者的详细信息，包括他们的地理位置、使用的设备、网站访问来源、网站流量、用户行为等等</description>
+    </item>
+    
     <item>
       <title>博客，是一种修行</title>
       <link>https://blog.lysoul.art/post/%E5%8D%9A%E5%AE%A2%E6%98%AF%E4%B8%80%E7%A7%8D%E4%BF%AE%E8%A1%8C/</link>
