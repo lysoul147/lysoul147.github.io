@@ -6,7 +6,16 @@
     <description>Recent content on lysoul</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 14 Mar 2023 23:09:01 +0800</lastBuildDate><atom:link href="https://blog.lysoul.art/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 17 Mar 2023 17:30:21 +0800</lastBuildDate><atom:link href="https://blog.lysoul.art/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>打造一站式全功能 RSS 中心 Vol.1—— Huginn  的安装与基础使用</title>
+      <link>https://blog.lysoul.art/post/rss_vol1/</link>
+      <pubDate>Fri, 17 Mar 2023 17:30:21 +0800</pubDate>
+      
+      <guid>https://blog.lysoul.art/post/rss_vol1/</guid>
+      <description>前言 🔗RSS 技术相信各位都不陌生，这项诞生于 1999 年的技术，曾经是互联网门户的标配，如今 30 多年过去了，在社交媒体、短视频等新兴媒介日益蓬勃的今天</description>
+    </item>
+    
     <item>
       <title>为Hugo添加Google Analytics V4</title>
       <link>https://blog.lysoul.art/post/%E4%B8%BAhugo%E6%B7%BB%E5%8A%A0google-analytics-v4/</link>

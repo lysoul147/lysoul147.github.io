@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <title>打造一站式全功能 RSS 中心 Vol.1—— Huginn  的安装与基础使用 | lysoul</title>
+
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">    
+<meta name="viewport" content="width=device-width,minimum-scale=1">
+<meta name="description" content="前言 🔗RSS 技术相信各位都不陌生，这项诞生于 1999 年的技术，曾经是互联网门户的标配，如今 30 多年过去了，在社交媒体、短视频等新兴媒介日益蓬勃的今天">
+<meta name="generator" content="Hugo 0.111.2">
+
+
+  <META NAME="ROBOTS" CONTENT="INDEX, FOLLOW">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+
+ 
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1KF5Z02B33"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-1KF5Z02B33');
+</script>
+
+
+
+
+
+
+  </head>
+
+  <body>
+    <nav class="navigation">
+	
+		<a href="/"> <span class="arrow">←</span>Home</a>
+	
+	<a href="/posts">Archive</a>
+	<a href="/tags">Tags</a>
+	<a href="/about">About</a>
+
+	
+
+	
+	  <a class="button" href="https://blog.lysoul.art/index.xml">Subscribe</a>
+	
+</nav>
+
+
+    <main class="main">
+      
+
+<section id="single">
+    <h1 class="title">打造一站式全功能 RSS 中心 Vol.1—— Huginn  的安装与基础使用</h1>
+
+    <div class="tip">
+        <time datetime="2023-03-17 17:30:21 &#43;0800 CST">Mar 17, 2023</time>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          5960 words
+        </span>
+        <span class="split">
+          ·
+        </span>
+        <span>
+          12 minute read
+        </span>
+    </div>
+
+    
+    
+        
+  
+    <aside class="toc">
+      <details>
+          <summary>Table of Contents
+          </summary>
+          <div>
+              <nav id="TableOfContents">
+  <ul>
+    <li><a href="#前言">前言</a>
+      <ul>
+        <li><a href="#保证信息的质量">保证信息的质量</a></li>
+        <li><a href="#获取信息的效率">获取信息的效率</a></li>
+        <li><a href="#数据的安全性">数据的安全性</a></li>
+      </ul>
+    </li>
+    <li><a href="#为什么使用-huginn-">为什么使用 Huginn ？</a></li>
+    <li><a href="#什么是-huginn-">什么是 Huginn ？</a></li>
+    <li><a href="#huginn-的基础概念">Huginn 的基础概念</a>
+      <ul>
+        <li><a href="#agent-代理">Agent 代理</a></li>
+        <li><a href="#event-事件">Event 事件</a></li>
+      </ul>
+    </li>
+    <li><a href="#准备工作">准备工作</a></li>
+    <li><a href="#安装-huginn">安装 Huginn</a></li>
+    <li><a href="#使用-huginn-制作-rss-源">使用 Huginn 制作 RSS 源</a>
+      <ul>
+        <li><a href="#1-创建-scenarios">1. 创建 <strong>Scenarios</strong></a></li>
+        <li><a href="#2-website-agent-获取文章列表">2. Website Agent 获取文章列表</a></li>
+        <li><a href="#如何获取-xpath-">如何获取 xpath ？</a></li>
+        <li><a href="#使用-chrome-获取-xpath">使用 Chrome 获取 xpath</a></li>
+        <li><a href="#编辑-extract">编辑 extract</a></li>
+        <li><a href="#3-website-agent-2-抓取正文">3. Website Agent 2 抓取正文</a></li>
+        <li><a href="#4-data-output-agent-输出-rss-源">4. Data Output Agent 输出 RSS 源</a></li>
+        <li><a href="#5-查看效果">5. 查看效果</a></li>
+      </ul>
+    </li>
+    <li><a href="#结语">结语</a></li>
+  </ul>
+</nav>
+          </div>
+      </details>
+    </aside>
+  
+
+
+    
+
+
+    <div class="content">
+      <h2 id="前言">前言 <a href="#%e5%89%8d%e8%a8%80" class="anchor">🔗</a></h2><p>RSS 技术相信各位都不陌生，这项诞生于 1999 年的技术，曾经是互联网门户的标配，如今 30 多年过去了，在社交媒体、短视频等新兴媒介日益蓬勃的今天，我们有顶着大量未读标记的微信公众号，有怎么划都刷不完的抖音，还有总是能猜对你“喜好”的今日头条，属于 RSS 的地盘日渐式微。</p>
+<p>既然有诸多不便，为什么今天我们还需要 RSS？我想有以下几个原因：</p>
+<h3 id="保证信息的质量">保证信息的质量 <a href="#%e4%bf%9d%e8%af%81%e4%bf%a1%e6%81%af%e7%9a%84%e8%b4%a8%e9%87%8f" class="anchor">🔗</a></h3><p>过去我们思考从哪里获取信息，现在我们思考如何过滤信息。</p>
+<p>随着网络技术和硬件的普及，信息变得越来越碎片化、娱乐化，在算法地不停投喂下，我们时刻处于信息过载的状态。与其把信息的源头交给算法，不如自己选择和控制，在数量和质量上更有保障。</p>
+<h3 id="获取信息的效率">获取信息的效率 <a href="#%e8%8e%b7%e5%8f%96%e4%bf%a1%e6%81%af%e7%9a%84%e6%95%88%e7%8e%87" class="anchor">🔗</a></h3><p>这里的效率，指的不是信息的时效性，而是信息的聚合，RSS 关键解决的痛点就在于聚合。</p>
+<p>如今的互联网群雄割据，各自占山为王，打着私域流量的旗子，想尽办法将你留在自己的 APP 内，为了获取不同平台中最有价值的信息，我们必须在不同的 APP 或网站里切来切去，这个过程本就消耗了大量时间，而如果你恰好又被联想推荐的内容或是自动上滑的短视频所吸引，恐怕眼睛一闭一睁，一个上午又过去了。</p>
+<p>RSS 将所有信息都放在一个 APP 里获取，同时排除掉一切干扰，专注地处理信息，则效率大大提升。</p>
+<h3 id="数据的安全性">数据的安全性 <a href="#%e6%95%b0%e6%8d%ae%e7%9a%84%e5%ae%89%e5%85%a8%e6%80%a7" class="anchor">🔗</a></h3><p>如今的互联网企业越来越倾向于提供“流”式数据，这使得你很难将数据私有化，今天你能访问这个页面，不代表明天还能访问，在这种趋势下，人的思维习惯越来越不在意自己看过什么，而在意自己将要看什么，看的越多忘的也越多，“流”式的信息使得我们很难组织起自己独有的知识网络。将自己获取到的优质信息，处理、加工、存储，日后在需要时提取，才能形成完整的信息闭环。传统的 RSS 源由网络门户提供，也存在信息难以保存的特点，因此自部署（self-hosted）RSS 源是更为安全的选择。</p>
+<h2 id="为什么使用-huginn-">为什么使用 Huginn ？ <a href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e4%bd%bf%e7%94%a8-huginn-" class="anchor">🔗</a></h2><p>要打造一个功能齐全的 RSS 中心，需要满足以下几点：</p>
+<ul>
+<li>能够自定义抓取网页、API 接口的数据，抓取的方式要灵活</li>
+<li>有一定的数据处理能力，例如对抓取到的信息进行格式化</li>
+<li>抓取的服务器要支持本地部署，数据私有，易于管理</li>
+</ul>
+<p>市面上自制 RSS 源的工具不少，例如 Feed43 或者大名鼎鼎的 RSSHub，但均有各自的不足之处。</p>
+<p>Feed43 之类的国外服务，一来无法保证服务的稳定性，随时有关站的风险，二来国外访问国内网络资源有诸多水土不服的情况。</p>
+<p>而 RSSHub 虽然支持自部署，但公共的 RSS 源抓取规则容易失效，一旦失效只能等待规则发布者修复，比较被动，二来一些小众的网站无法支持，自己写抓取规则门槛又比较高。</p>
+<p>综合看来，Huginn 是更加合适的选择。</p>
+<h2 id="什么是-huginn-">什么是 Huginn ？ <a href="#%e4%bb%80%e4%b9%88%e6%98%af-huginn-" class="anchor">🔗</a></h2><p>Huginn 作为一款开源自动化工具，是 IFTTT 的自部署平替版本，模块化、组件化、流程化是 Huginn 最核心的特点，也是因此 Huginn 具有非常大的灵活性。制作 RSS 源只是 Huginn 的一个非常小的应用，熟练掌握 Huginn 之后，你会发现它巨大的潜力。</p>
+<p>Huginn 的上手难度不算小，官方没有提供中文界面，英文版 Wiki 倒是很详细，但描述有些模糊，如果没有一点 HTML 和 JS 基础，摸索起来还是有点困难。同时中文互联网上关于 Huginn 的教程也是为数甚少，自己使用 Huginn 差不多 2 年了，积累了一些使用经验，在此分享给大家。</p>
+<h2 id="huginn-的基础概念">Huginn 的基础概念 <a href="#huginn-%e7%9a%84%e5%9f%ba%e7%a1%80%e6%a6%82%e5%bf%b5" class="anchor">🔗</a></h2><p>Huginn 的软件逻辑，离不开两个基础概念——Agent 和 Event。</p>
+<h3 id="agent-代理">Agent 代理 <a href="#agent-%e4%bb%a3%e7%90%86" class="anchor">🔗</a></h3><p>Agent 可以理解为一个可以完成特定功能的自动化机器人，通过参数配置来告诉它何时完成何种工作。Huginn 中内置了种类庞多的 Agent ，有些 Agent 负责抓取网页内容，如 WebsiteAgent，有些可以连接外部API服务，如 WeiboAgent 、TwitterAgent，有的可以作为 Webhook 响应网络请求，还有的可以将数据输出为 RSS 源等等。</p>
+<h3 id="event-事件">Event 事件 <a href="#event-%e4%ba%8b%e4%bb%b6" class="anchor">🔗</a></h3><p>Event 是 Agent 运行的结果，同时也是 Agent 之间通信的载体。上游的 Agent 运行完毕后，根据 Agent 配置中的 Event 模板生成一个 Event，传递给下游的 Agent 进行解析并完成接下来的工作。Event 的类型通常是一个 JSON 对象。</p>
+<p><p class="markdown-image">
+  <img src="https://share.lysoul.art:39002/picture/202303201038300.png" alt="untitled"  />
+</p></p>
+<p>这种流程化的操作逻辑是使用 Huginn 的基础，发挥你的想象力，组合不同的 Agent 来灵活地实现不同的需求，是玩转 Huginn 的一大乐趣。</p>
+<h2 id="准备工作">准备工作 <a href="#%e5%87%86%e5%a4%87%e5%b7%a5%e4%bd%9c" class="anchor">🔗</a></h2><p>要做到自部署一个 Huginn 服务，需要做如下准备：</p>
+<ol>
+<li>一台 24 小时在线的 linux 服务器，部署在无论是公网服务器还在家宽小主机均可，重要的是可以连接互联网。</li>
+<li>如果是家宽部署，需要有公网 IP 或者公网 IPv6 地址。如果不具备这个条件，那么你仍需要一台公网服务器用于内网穿透，访问生成的 RSS 订阅源链接，除非你只打算在局域网环境使用 RSS。</li>
+</ol>
+<h2 id="安装-huginn">安装 Huginn <a href="#%e5%ae%89%e8%a3%85-huginn" class="anchor">🔗</a></h2><p>Docker 安装毫无疑问是最为推荐的方式，省心省力。使用 Docker 安装也有两种方案，一种是使用外部的 MySQL 或 postgres 数据库，另一种是使用 Huginn 镜像内自带的数据库，如果你的服务器上没有其他使用公用数据库的服务，那么直接使用Huginn 自带的数据库更为便捷。本文给出使用自带数据库的安装方法。</p>
+<ol>
+<li>为了便于管理数据，我们需要将 Huginn 容器内目录映射到宿主机，可能会出现读写权限问题，比较简单粗暴的办法是提前创建文件夹，并给于 777 权限：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir /home/username/huginn
+</span></span><span style="display:flex;"><span>chmod <span style="color:#666">777</span> /home/username/huginn
+</span></span></code></pre></div><ol>
+<li>部署容器。假设你已安装好 Docker，使用下列代码部署 Huginn ：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker run -itd --name huginn <span style="color:#b62;font-weight:bold">\
+</span></span></span><span style="display:flex;"><span><span style="color:#b62;font-weight:bold"></span>  -p 3000:3000 <span style="color:#b62;font-weight:bold">\
+</span></span></span><span style="display:flex;"><span><span style="color:#b62;font-weight:bold"></span>  -v /home/username/huginn:/var/lib/mysql <span style="color:#b62;font-weight:bold">\
+</span></span></span><span style="display:flex;"><span><span style="color:#b62;font-weight:bold"></span>  -e <span style="color:#b8860b">TIMEZONE</span><span style="color:#666">=</span>Beijing <span style="color:#b62;font-weight:bold">\
+</span></span></span><span style="display:flex;"><span><span style="color:#b62;font-weight:bold"></span>	--restart always <span style="color:#b62;font-weight:bold">\
+</span></span></span><span style="display:flex;"><span><span style="color:#b62;font-weight:bold"></span>    huginn/huginn
+</span></span></code></pre></div><p>参数解释：</p>
+<ul>
+<li><code>-p 3000:3000</code>将容器内的3000 端口映射到宿主机的 3000 端口，根据需要设置。</li>
+<li><code>-v /home/username/huginn:/var/lib/mysql</code>，此参数的目的是将容器内的<code>/var/lib/mysql</code>目录映射到宿主机的<code>/home/username/huginn</code>目录（第一步创建好的目录），这样方便我们在更新容器时保留数据，同时也方便备份 Huginn 的数据。</li>
+<li><code>-e TIMEZONE=Beijing</code>设定容器的时区，如果去掉此行可能会导致定时器不按预期时间工作。根据你所在时区进行配置，时区参数表可以参考此<a href="https://gist.github.com/lucascaton/bec400d18f7dcda61275" target="_blank" rel="noopener">网页</a>。</li>
+</ul>
+<p>待容器部署完成后，在浏览器打开<code>服务器IP:3000</code>即可看到 Huginn 的 web 客户端。</p>
+<p>初始账户的账号密码为<code>admin</code>和 <code>password</code>，记得完成登录后修改。</p>
+<h2 id="使用-huginn-制作-rss-源">使用 Huginn 制作 RSS 源 <a href="#%e4%bd%bf%e7%94%a8-huginn-%e5%88%b6%e4%bd%9c-rss-%e6%ba%90" class="anchor">🔗</a></h2><p>看到这里，想必你已经跃跃欲试打算制作一条 RSS 源。通常要制作一条带全文输出功能的 RSS 源，我们需要用到 3 个 Agent，流程图如下所示：</p>
+<p><p class="markdown-image">
+  <img src="https://share.lysoul.art:39002/picture/202303201032344.png" alt="Untitled"  />
+</p></p>
+<h3 id="1-创建-scenarios">1. 创建 <strong>Scenarios</strong> <a href="#1-%e5%88%9b%e5%bb%ba-scenarios" class="anchor">🔗</a></h3><p><strong>Scenarios</strong> 相当于给 Agent 打组，方便管理一组 Agent 流程。点击<code>顶栏→Scenarios→New Scenarios</code>，创建一个新的Scenarios。</p>
+<p><p class="markdown-image">
+  <img src="https://share.lysoul.art:39002/picture/202303201041609.png" alt="Untitled"  />
+</p></p>
+<h3 id="2-website-agent-获取文章列表">2. Website Agent 获取文章列表 <a href="#2-website-agent-%e8%8e%b7%e5%8f%96%e6%96%87%e7%ab%a0%e5%88%97%e8%a1%a8" class="anchor">🔗</a></h3><p>Website Agent 顾名思义是用来发起网络请求，访问网页的代理。在上一部创建好的 Scenarios 页面，点击<code>New Agent</code> 创建一个新的 Agent，在下拉列表中找到 Website Agent。</p>
+<p><p class="markdown-image">
+  <img src="https://share.lysoul.art:39002/picture/202303201041623.png" alt="Create Agent - Huginn - 192.168.2.240.png"  />
+</p></p>
+<p>左侧为 Agent 的参数配置，右侧为帮助文档，参数配置中主要关注：</p>
+<ul>
+<li>Name：为 Agent 命名，方便管理</li>
+<li>Schedule：Agent 运行的定时器，可以设定多久运行一次，通常的 RSS 源设置为 1d，即每日刷新一次即可。</li>
+<li>Source：设置上游 Agent，由于这是RSS 流程中的第一个 Agent，因此此处留空。</li>
+<li>Receiver：设置下游 Agent，通常不必刻意设置，当我们从上至下依次建立 Agent 时，此参数可以自动配置</li>
+<li>Option：上述选项是 Agent 的通用配置，而 Option 是 Agent 的特殊配置，Option 决定了 Agent 如何行动。Option 是一个 JSON 格式的数据，点击右侧的 Toggle View 可以在GUI 编辑器和文本编辑器两者间切换。Huginn 提供的文本编辑器编辑 JSON 的体验不太友好，而且考虑到符号转义问题，建议直接使用 GUI 编辑器。</li>
+</ul>
+<p>下面解析一下 Website Agent 的 Option 设置：</p>
+<ul>
+<li><code>expected_update_period_in_days</code>：这是一个很容易被忽视参数，大部分 Agent 都包含此参数，这个参数的含义是“这个 Agent 预期在至少多少天内会生成 Event”，比如某个博客平均 3 天会更新一次文章，那么此处就填 3 或更大的数字。当这个 Agent 超过 3 天没有输出 Event 时，Agent 的 Work 属性就会变为 <code>No</code>，当你拥有的 Agent 数量非常多时，你可以快速找到那些可能失效的 Agent，因此正确配置此项是一个好的习惯。</li>
+</ul>
+<p><p class="markdown-image">
+  <img src="https://share.lysoul.art:39002/picture/202303201041633.png" alt="Untitled"  />
+</p></p>
+<ul>
+<li><code>url</code>：Website Agent 抓取的网页 URL 源，<code>url</code> 除了可以配置单个 url 外，还可以将其改为数组的类型，放入多个 Url，Agent 可以同时监控这些网页源，只要这些 Url 对应的网页的 HTML 结构是相同的即可。</li>
+</ul>
+<p><p class="markdown-image">
+  <img src="https://share.lysoul.art:39002/picture/202303201041642.png" alt="Untitled"  />
+</p></p>
+<ul>
+<li>
+<p><code>type</code>：定义请求网页时获取到的数据形式，绝大部分情况下我们获取到的都是 HTML 格式，有些情况下也可能是 json 格式或 text 纯文本。</p>
+</li>
+<li>
+<p><code>mode</code>：定义 Agent 发送 Event 的行为。通常两个值可选</p>
+<ul>
+<li><code>on_change</code>: 只有在监控的网页元素发生变化时才生成 Event。</li>
+<li><code>merge</code>：将抓取的网页内容合并到上游 Event 中，并生成新的 Event，无论网页是否变化。</li>
+</ul>
+</li>
+<li>
+<p><code>extract</code>：指定抓取网页哪些元素，并将抓取到的元素放入到 Event 中的什么字段中。这是抓取的关键配置。对于一条 RSS 源，最关键的信息有标题、正文和源链接，因此我们可以将它们放入 <code>url、title、hovertext</code> 三个字段中。推荐使用 <code>xpath</code> 的方式，对于新手而言会更好理解一点。</p>
+<h3 id="如何获取-xpath-">如何获取 xpath ？ <a href="#%e5%a6%82%e4%bd%95%e8%8e%b7%e5%8f%96-xpath-" class="anchor">🔗</a></h3><p>xpath 是一种用于定位 HTML 文件中标签元素的表达式。一个常规的 HTML 源码，其中的元素通常是层层嵌套的，例如这样一段 HTML 代码：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>&lt;<span style="color:#008000;font-weight:bold">body</span>&gt;
+</span></span><span style="display:flex;"><span>	&lt;<span style="color:#008000;font-weight:bold">div</span> <span style="color:#b44">class</span><span style="color:#666">=</span><span style="color:#b44">&#34;container&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>		&lt;<span style="color:#008000;font-weight:bold">div</span> <span style="color:#b44">class</span><span style="color:#666">=</span><span style="color:#b44">&#34;content&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>			&lt;<span style="color:#008000;font-weight:bold">div</span> <span style="color:#b44">class</span><span style="color:#666">=</span><span style="color:#b44">&#34;article&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>				&lt;<span style="color:#008000;font-weight:bold">h2</span>&gt;My Article&lt;/<span style="color:#008000;font-weight:bold">h2</span>&gt;
+</span></span><span style="display:flex;"><span>				&lt;<span style="color:#008000;font-weight:bold">p</span>&gt;This is the content of my article.&lt;/<span style="color:#008000;font-weight:bold">p</span>&gt;
+</span></span><span style="display:flex;"><span>			&lt;/<span style="color:#008000;font-weight:bold">div</span>&gt;
+</span></span><span style="display:flex;"><span>		&lt;/<span style="color:#008000;font-weight:bold">div</span>&gt;
+</span></span><span style="display:flex;"><span>	&lt;/<span style="color:#008000;font-weight:bold">div</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#008000;font-weight:bold">body</span>&gt;
+</span></span></code></pre></div><p>如果我们想定位<code>My Article</code>这个元素，则 xpath 的路径为<code>/body/div/div/div/h2</code>。可以看到 xpath 是一种类似面包屑导航的定位方式。</p>
+<h3 id="使用-chrome-获取-xpath">使用 Chrome 获取 xpath <a href="#%e4%bd%bf%e7%94%a8-chrome-%e8%8e%b7%e5%8f%96-xpath" class="anchor">🔗</a></h3><p>以我的博客为例，在 Chrome 中打开<a href="https://blog.lysoul.art/" target="_blank" rel="noopener">https://blog.lysoul.art/</a>，按下 Cmd/Ctrl + Shift + C，打开开发者工具的选取模式，点击博客列表中的标题，在页面右侧可以看到该元素在网页源码中的位置。</p>
+<p><p class="markdown-image">
+  <img src="https://share.lysoul.art:39002/picture/202303201041651.png" alt="Untitled"  />
+</p></p>
+<p>可以看到，标题指向了一个<code>&lt;a&gt;</code>标签。可以看到这个<code>&lt;a&gt;</code>标签包含了我们需要的标题和 Url，我们直接右键点击，复制 xpath。</p>
+<p><p class="markdown-image">
+  <img src="https://share.lysoul.art:39002/picture/202303201041660.png" alt="Untitled"  />
+</p></p>
+<p>得到的结果是<code>//*[@id=&quot;list-page&quot;]/section[1]/div[1]/h1/a</code>，但这条 xpath 指向的是这个特定的<a>标签，但我们期望的是列表中所有的<a>标签都能被抓取，抓取列表的关键在于，找到存在<strong>并列关系</strong>的标签，即一组存在相同属性的标签，于是我们依次查看<a>标签的父标签，直到发现<code>&lt;section&gt;标签</code>存在并列关系。</p>
+  <aside>
+  💡 这里的`//*[@id="list-page"]`表示的是`id="list-page"`的 div 标签，使用了相对路径。
+  </aside>
+<p><p class="markdown-image">
+  <img src="https://share.lysoul.art:39002/picture/202303201041675.png" alt="Untitled"  />
+</p></p>
+<p>我们可以将 <code>//*[@id=&quot;list-page&quot;]/section[1]/div[1]/h1/a</code>中的<code>/section[1]</code>改写为<code>/section[*]</code>，用<code>[*]</code>遍历所有的<code>&lt;section&gt;标签</code>。因此xpath 表达式改写为<code>//*[@id=&quot;list-page&quot;]/section[*]/div[1]/h1/a</code></p>
+<p>这样，我们就获得了列表中所有的带有标题和 url 信息的<code>&lt;a&gt;</code>标签的 xpath，接下来，回到 Website Agent 的配置界面，编辑 exctract 选项。</p>
+<h3 id="编辑-extract">编辑 extract <a href="#%e7%bc%96%e8%be%91-extract" class="anchor">🔗</a></h3><p><p class="markdown-image">
+  <img src="https://share.lysoul.art:39002/picture/202303201041683.png" alt="Untitled"  />
+</p></p>
+<p>在 extract 中，我们定义了两个字段，url 和 title，每个字段下嵌套有两个字段：xpath 即为我们刚刚找到的 ，value 字段则定义了我们如何从这个<code>&lt;a&gt;</code>标签中取值。</p>
+<p><p class="markdown-image">
+  <img src="https://share.lysoul.art:39002/picture/202303201041701.png" alt="Untitled"  />
+</p></p>
+<p>value 字段的常见取值方式有几种：</p>
+<ul>
+<li><code>@href</code>使用@关键字并附加标签对应属性，可以提取属性的值@href即表示提取了 href 的值，也就是我们需要的 url。</li>
+<li><code>string(.)</code>提取标签中的字符串，如图所示，要注意的是，如果此标签还有子标签，则子标签的内容也会被提取，但不会包含子标签代码本身。</li>
+<li><code>.</code>点符号表示原样输出，会包含所有标签代码本身。</li>
+</ul>
+<p>完成配置后，我们用于抓取文章列表的 Website Agent 就编辑完成了，这里贴出 Option 的 JSON 代码以供参考：</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#008000;font-weight:bold">&#34;expected_update_period_in_days&#34;</span>: <span style="color:#b44">&#34;2&#34;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#008000;font-weight:bold">&#34;url&#34;</span>: <span style="color:#b44">&#34;https://blog.lysoul.art/&#34;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#008000;font-weight:bold">&#34;type&#34;</span>: <span style="color:#b44">&#34;html&#34;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#008000;font-weight:bold">&#34;mode&#34;</span>: <span style="color:#b44">&#34;on_change&#34;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#008000;font-weight:bold">&#34;extract&#34;</span>: {
+</span></span><span style="display:flex;"><span>		<span style="color:#008000;font-weight:bold">&#34;url&#34;</span>: {
+</span></span><span style="display:flex;"><span>			<span style="color:#008000;font-weight:bold">&#34;xpath&#34;</span>: <span style="color:#b44">&#34;//*[@id=\&#34;list-page\&#34;]/section[*]/div[1]/h1/a&#34;</span>,
+</span></span><span style="display:flex;"><span>			<span style="color:#008000;font-weight:bold">&#34;value&#34;</span>: <span style="color:#b44">&#34;@href&#34;</span>
+</span></span><span style="display:flex;"><span>		},
+</span></span><span style="display:flex;"><span>		<span style="color:#008000;font-weight:bold">&#34;title&#34;</span>: {
+</span></span><span style="display:flex;"><span>			<span style="color:#008000;font-weight:bold">&#34;xpath&#34;</span>: <span style="color:#b44">&#34;//*[@id=\&#34;list-page\&#34;]/section[*]/div[1]/h1/a&#34;</span>,
+</span></span><span style="display:flex;"><span>			<span style="color:#008000;font-weight:bold">&#34;value&#34;</span>: <span style="color:#b44">&#34;string(.)&#34;</span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>完成后点击 Dry Run，测试 Agent 是否可以正常工作，结果如图所示：</p>
+<p><p class="markdown-image">
+  <img src="https://share.lysoul.art:39002/picture/202303201041710.png" alt="Untitled"  />
+</p></p>
+<p>可以看到， 运行结果是一个数组对象，包含两个 JSON 对象，这意味着如果我们运行这个 Agent，将会生成两个 Event，每个 Event 分别包含标题和 Url 信息。</p>
+<p>由于我们在列表中没有抓取到正文，因此我们还需要再建立一个 Website Agent 来抓取正文</p>
+</li>
+</ul>
+<h3 id="3-website-agent-2-抓取正文">3. Website Agent 2 抓取正文 <a href="#3-website-agent-2-%e6%8a%93%e5%8f%96%e6%ad%a3%e6%96%87" class="anchor">🔗</a></h3><p><p class="markdown-image">
+  <img src="https://share.lysoul.art:39002/picture/202303201041718.png" alt="Untitled"  />
+</p></p>
+<p>再次新建 Website Agent ，注意以下通用配置参数：</p>
+<ul>
+<li>Schedule：<code>never</code></li>
+<li>Source：指定 Website Agent 1并勾选<code>Propagate immediately</code>（重要）</li>
+</ul>
+<p>我们期望此 Agent 不需要定时运行，而是接受到 Website Agent 1 的结果 Event 后再自动触发运行。</p>
+<h4 id="编辑-option">编辑 Option <a href="#%e7%bc%96%e8%be%91-option" class="anchor">🔗</a></h4><p>注意以下配置：</p>
+<ul>
+<li><code>url</code>：还记得上一个 Agent 生成的 Event 中的 Url 吗？观察一下会发现这个 url 只给出了 <code>url 路由</code>，是一个相对路径，因此我们需要在指定的 Url 中拼接出完整的 url，示例<code>https://blog.lysoul.art{{ url }}</code>，其中的<code>{{ url }}</code>为 Liquid 语法，可以调用传入 Event 中的 <code>url</code> 字段，与<code>https://blog.lysoul.art</code>拼接形成完整的 url</li>
+<li><code>mode</code>： 配置为 merge，这样生成的 Event 会包含传入的 Event 中的 title 和 url 字段</li>
+<li><code>extract</code>：配置了一个 <code>hovertext</code> 字段，用于保存文章正文</li>
+</ul>
+<h4 id="获取正文-xpath">获取正文 xpath <a href="#%e8%8e%b7%e5%8f%96%e6%ad%a3%e6%96%87-xpath" class="anchor">🔗</a></h4><p>获取正文 xpath 通常更简单，还是一样使用 Chrome 的元素选择器定位，直接找到正文的元素，复制它的 xpath 即可。</p>
+<p><p class="markdown-image">
+  <img src="https://share.lysoul.art:39002/picture/202303201041727.png" alt="Untitled"  />
+</p></p>
+<p>至此，Option 的配置如下：</p>
+<p><p class="markdown-image">
+  <img src="https://share.lysoul.art:39002/picture/202303201041737.png" alt="Untitled"  />
+</p></p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#008000;font-weight:bold">&#34;expected_update_period_in_days&#34;</span>: <span style="color:#b44">&#34;2&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#008000;font-weight:bold">&#34;url&#34;</span>: <span style="color:#b44">&#34;https://blog.lysoul.art{{ url }}&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#008000;font-weight:bold">&#34;type&#34;</span>: <span style="color:#b44">&#34;html&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#008000;font-weight:bold">&#34;mode&#34;</span>: <span style="color:#b44">&#34;merge&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#008000;font-weight:bold">&#34;extract&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#008000;font-weight:bold">&#34;hovertext&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#008000;font-weight:bold">&#34;xpath&#34;</span>: <span style="color:#b44">&#34;//*[@id=\&#34;single\&#34;]&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#008000;font-weight:bold">&#34;value&#34;</span>: <span style="color:#b44">&#34;.&#34;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>注意 value 的值使用了<code>.</code>点符号取值，这样我们可以把正文中的源码统统抓取下来，在输出 RSS 时可以保证格式上最接近原始网页。</p>
+<p>Dry Run 一下测试，注意由于此 Agent 引用了传入的 Event 中的数据，因此如果上游 Agent 还没运行过，没有已生成的 Event，那么我们可以手动模拟一个 Event 来测试，如图所示：</p>
+<p><p class="markdown-image">
+  <img src="https://share.lysoul.art:39002/picture/202303201041737.png" alt="Untitled"  />
+</p></p>
+<p>点击 Dry Run，测试结果：</p>
+<p><p class="markdown-image">
+  <img src="https://share.lysoul.art:39002/picture/202303201041752.png" alt="Untitled"  />
+</p></p>
+<p>可以看到，正确地获取了正文源码。</p>
+<h3 id="4-data-output-agent-输出-rss-源">4. Data Output Agent 输出 RSS 源 <a href="#4-data-output-agent-%e8%be%93%e5%87%ba-rss-%e6%ba%90" class="anchor">🔗</a></h3><p>新建一个 Data Output Agent ，在通用设置中主要注意配置 Source 为第二步的 Website Agent 2，并且勾选<code>Propagate immediately</code>。</p>
+<h4 id="option-配置解析">Option 配置解析： <a href="#option-%e9%85%8d%e7%bd%ae%e8%a7%a3%e6%9e%90" class="anchor">🔗</a></h4><p><p class="markdown-image">
+  <img src="https://share.lysoul.art:39002/picture/202303201041760.png" alt="Untitled"  />
+</p></p>
+<ul>
+<li><code>secrets</code>：为当前 RSS 配置一个 URL 路由，由于访问 RSS 源链接不需要认证，可以防止其他人根据你公开的 RSS 源猜测到你所有的 RSS 源链接</li>
+<li><code>template</code>：RSS 模板
+<ul>
+<li><code>title</code>：RSS 源标题</li>
+<li><code>descrition</code>：RSS 源描述</li>
+<li><code>item</code>：RSS 条目模板
+<ul>
+<li><code>title</code>：条目标题，使用 Liquid 语法 <code>{{ title }}</code> 引用 Event 中的 title 即可</li>
+<li><code>description</code>：正文，同上引用<code>{{ hovertext }}</code></li>
+<li><code>link</code>：条目源链接，引用<code>{{ url }}</code></li>
+</ul>
+</li>
+<li><code>link</code>：这一条是默认参数中没有的，填入 RSS 源网站主页。这一条的目的是为了我们的 RSS 阅读器在订阅这条 RSS 源时，能够正确显示 RSS 源网站图标，否则图标是缺省的，这对于强迫症患者有很好的帮助。</li>
+</ul>
+</li>
+</ul>
+<p>好了，到这里，一条 RSS 源的抓取流程就配置完毕了。</p>
+<h3 id="5-查看效果">5. 查看效果 <a href="#5-%e6%9f%a5%e7%9c%8b%e6%95%88%e6%9e%9c" class="anchor">🔗</a></h3><p><p class="markdown-image">
+  <img src="https://share.lysoul.art:39002/picture/202303201041769.png" alt="Untitled"  />
+</p></p>
+<p>回到 Scenario，点击 Run 运行 Website Agent 1，稍等片刻，打开 Data Output Agent，找到 xml 对应的 URL，点击打开就可以看到 RSS 源了。</p>
+<p><p class="markdown-image">
+  <img src="https://share.lysoul.art:39002/picture/202303201041777.png" alt="Untitled"  />
+</p></p>
+<h2 id="结语">结语 <a href="#%e7%bb%93%e8%af%ad" class="anchor">🔗</a></h2><p>互联网门户的收益方式与用户体验总是存在一种零和博弈，RSS 在为人们带去便捷的同时，服务提供商失去的是网站广告点击和用户行为数据，如今，大量的网络服务不再提供 RSS 源，或者不提供 RSS 的全文阅读，也是无奈之举。</p>
+<p>RSS 带给我们便利的同时，也从某种角度上损害了内容平台和创作者的利益，因此，如果看到了好的内容，别忘了点击打开源网页逛逛，或者给内容创作者打赏一杯咖啡，为优质的内容创作者和平台带来正向循环，帮助世界创造更好的网络信息环境。</p>
+
+    </div>
+
+    
+    
+    
+
+</section>
+
+
+    </main>
+    
+    <footer id="footer">
+    
+        <div id="social">
+
+
+    <a class="symbol" href="lysoul147.github.com" rel="me" target="_blank">
+        
+        <svg fill="#bbbbbb" width="28" height="28"  viewBox="0 0 72 72" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    
+    <title>Github</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Social-Icons---Rounded-Black" transform="translate(-264.000000, -939.000000)">
+            <g id="Github" transform="translate(264.000000, 939.000000)">
+                <path d="M8,72 L64,72 C68.418278,72 72,68.418278 72,64 L72,8 C72,3.581722 68.418278,-8.11624501e-16 64,0 L8,0 C3.581722,8.11624501e-16 -5.41083001e-16,3.581722 0,8 L0,64 C5.41083001e-16,68.418278 3.581722,72 8,72 Z" id="Rounded" fill="#bbbbbb"></path>
+                <path d="M35.9985,13 C22.746,13 12,23.7870921 12,37.096644 C12,47.7406712 18.876,56.7718301 28.4145,59.9584121 C29.6145,60.1797862 30.0525,59.4358488 30.0525,58.7973276 C30.0525,58.2250681 30.0315,56.7100863 30.0195,54.6996482 C23.343,56.1558981 21.9345,51.4693938 21.9345,51.4693938 C20.844,48.6864054 19.2705,47.9454799 19.2705,47.9454799 C17.091,46.4500754 19.4355,46.4801943 19.4355,46.4801943 C21.843,46.6503662 23.1105,48.9634994 23.1105,48.9634994 C25.2525,52.6455377 28.728,51.5823398 30.096,50.9649018 C30.3135,49.4077535 30.9345,48.3460615 31.62,47.7436831 C26.2905,47.1352808 20.688,45.0691228 20.688,35.8361671 C20.688,33.2052792 21.6225,31.0547881 23.1585,29.3696344 C22.911,28.7597262 22.0875,26.3110578 23.3925,22.9934585 C23.3925,22.9934585 25.4085,22.3459017 29.9925,25.4632101 C31.908,24.9285993 33.96,24.6620468 36.0015,24.6515052 C38.04,24.6620468 40.0935,24.9285993 42.0105,25.4632101 C46.5915,22.3459017 48.603,22.9934585 48.603,22.9934585 C49.9125,26.3110578 49.089,28.7597262 48.8415,29.3696344 C50.3805,31.0547881 51.309,33.2052792 51.309,35.8361671 C51.309,45.0917119 45.6975,47.1292571 40.3515,47.7256117 C41.2125,48.4695491 41.9805,49.9393525 41.9805,52.1877301 C41.9805,55.4089489 41.9505,58.0067059 41.9505,58.7973276 C41.9505,59.4418726 42.3825,60.1918338 43.6005,59.9554002 C53.13,56.7627944 60,47.7376593 60,37.096644 C60,23.7870921 49.254,13 35.9985,13" fill="#FFFFFF"></path>
+            </g>
+        </g>
+    </g>
+</svg>
+    </a>
+
+
+</div>
+
+    
+
+    <div class="copyright">
+    
+       © Copyright 
+       2023 
+       <span class="split">
+        <svg fill="#bbbbbb" width="15" height="15" version="1.1" id="heart-15" xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 15 15">
+  <path d="M13.91,6.75c-1.17,2.25-4.3,5.31-6.07,6.94c-0.1903,0.1718-0.4797,0.1718-0.67,0C5.39,12.06,2.26,9,1.09,6.75&#xA;&#x9;C-1.48,1.8,5-1.5,7.5,3.45C10-1.5,16.48,1.8,13.91,6.75z"/>
+</svg>
+       </span>
+       lysoul
+    
+    </div>
+
+    
+      <div class="powerby">
+        Powered by <a href='http://www.gohugo.io/'>Hugo</a> Theme By <a href='https://github.com/nodejh/hugo-theme-mini'>nodejh</a>
+      </div>
+    
+</footer>
+
+
+
+  </body>
+</html>
