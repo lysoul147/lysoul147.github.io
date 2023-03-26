@@ -16,6 +16,11 @@
 <link rel="stylesheet" href="/css/style.css">
 
 
+  
+    
+    <link rel="stylesheet" href="https://blog.lysoul.artcss/custom.css">
+  
+
 
 <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
 
@@ -164,17 +169,17 @@
 <ol>
 <li>为了便于管理数据，我们需要将 Huginn 容器内目录映射到宿主机，可能会出现读写权限问题，比较简单粗暴的办法是提前创建文件夹，并给于 777 权限：</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir /home/username/huginn
-</span></span><span style="display:flex;"><span>chmod <span style="color:#666">777</span> /home/username/huginn
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir /home/username/huginn
+</span></span><span style="display:flex;"><span>chmod <span style="color:#bd93f9">777</span> /home/username/huginn
 </span></span></code></pre></div><ol>
 <li>部署容器。假设你已安装好 Docker，使用下列代码部署 Huginn ：</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker run -itd --name huginn <span style="color:#b62;font-weight:bold">\
-</span></span></span><span style="display:flex;"><span><span style="color:#b62;font-weight:bold"></span>  -p 3000:3000 <span style="color:#b62;font-weight:bold">\
-</span></span></span><span style="display:flex;"><span><span style="color:#b62;font-weight:bold"></span>  -v /home/username/huginn:/var/lib/mysql <span style="color:#b62;font-weight:bold">\
-</span></span></span><span style="display:flex;"><span><span style="color:#b62;font-weight:bold"></span>  -e <span style="color:#b8860b">TIMEZONE</span><span style="color:#666">=</span>Beijing <span style="color:#b62;font-weight:bold">\
-</span></span></span><span style="display:flex;"><span><span style="color:#b62;font-weight:bold"></span>	--restart always <span style="color:#b62;font-weight:bold">\
-</span></span></span><span style="display:flex;"><span><span style="color:#b62;font-weight:bold"></span>    huginn/huginn
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>docker run -itd --name huginn <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>  -p 3000:3000 <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>  -v /home/username/huginn:/var/lib/mysql <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>  -e <span style="color:#8be9fd;font-style:italic">TIMEZONE</span><span style="color:#ff79c6">=</span>Beijing <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>	--restart always <span style="color:#f1fa8c">\
+</span></span></span><span style="display:flex;"><span><span style="color:#f1fa8c"></span>    huginn/huginn
 </span></span></code></pre></div><p>参数解释：</p>
 <ul>
 <li><code>-p 3000:3000</code>将容器内的3000 端口映射到宿主机的 3000 端口，根据需要设置。</li>
@@ -230,16 +235,16 @@
 <li>
 <p><code>extract</code>：指定抓取网页哪些元素，并将抓取到的元素放入到 Event 中的什么字段中。这是抓取的关键配置。对于一条 RSS 源，最关键的信息有标题、正文和源链接，因此我们可以将它们放入 <code>url、title、hovertext</code> 三个字段中。推荐使用 <code>xpath</code> 的方式，对于新手而言会更好理解一点。</p>
 <h3 id="如何获取-xpath-">如何获取 xpath ？ <a href="#%e5%a6%82%e4%bd%95%e8%8e%b7%e5%8f%96-xpath-" class="anchor">🔗</a></h3><p>xpath 是一种用于定位 HTML 文件中标签元素的表达式。一个常规的 HTML 源码，其中的元素通常是层层嵌套的，例如这样一段 HTML 代码：</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>&lt;<span style="color:#008000;font-weight:bold">body</span>&gt;
-</span></span><span style="display:flex;"><span>	&lt;<span style="color:#008000;font-weight:bold">div</span> <span style="color:#b44">class</span><span style="color:#666">=</span><span style="color:#b44">&#34;container&#34;</span>&gt;
-</span></span><span style="display:flex;"><span>		&lt;<span style="color:#008000;font-weight:bold">div</span> <span style="color:#b44">class</span><span style="color:#666">=</span><span style="color:#b44">&#34;content&#34;</span>&gt;
-</span></span><span style="display:flex;"><span>			&lt;<span style="color:#008000;font-weight:bold">div</span> <span style="color:#b44">class</span><span style="color:#666">=</span><span style="color:#b44">&#34;article&#34;</span>&gt;
-</span></span><span style="display:flex;"><span>				&lt;<span style="color:#008000;font-weight:bold">h2</span>&gt;My Article&lt;/<span style="color:#008000;font-weight:bold">h2</span>&gt;
-</span></span><span style="display:flex;"><span>				&lt;<span style="color:#008000;font-weight:bold">p</span>&gt;This is the content of my article.&lt;/<span style="color:#008000;font-weight:bold">p</span>&gt;
-</span></span><span style="display:flex;"><span>			&lt;/<span style="color:#008000;font-weight:bold">div</span>&gt;
-</span></span><span style="display:flex;"><span>		&lt;/<span style="color:#008000;font-weight:bold">div</span>&gt;
-</span></span><span style="display:flex;"><span>	&lt;/<span style="color:#008000;font-weight:bold">div</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;/<span style="color:#008000;font-weight:bold">body</span>&gt;
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>&lt;<span style="color:#ff79c6">body</span>&gt;
+</span></span><span style="display:flex;"><span>	&lt;<span style="color:#ff79c6">div</span> <span style="color:#50fa7b">class</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;container&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>		&lt;<span style="color:#ff79c6">div</span> <span style="color:#50fa7b">class</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;content&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>			&lt;<span style="color:#ff79c6">div</span> <span style="color:#50fa7b">class</span><span style="color:#ff79c6">=</span><span style="color:#f1fa8c">&#34;article&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>				&lt;<span style="color:#ff79c6">h2</span>&gt;My Article&lt;/<span style="color:#ff79c6">h2</span>&gt;
+</span></span><span style="display:flex;"><span>				&lt;<span style="color:#ff79c6">p</span>&gt;This is the content of my article.&lt;/<span style="color:#ff79c6">p</span>&gt;
+</span></span><span style="display:flex;"><span>			&lt;/<span style="color:#ff79c6">div</span>&gt;
+</span></span><span style="display:flex;"><span>		&lt;/<span style="color:#ff79c6">div</span>&gt;
+</span></span><span style="display:flex;"><span>	&lt;/<span style="color:#ff79c6">div</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#ff79c6">body</span>&gt;
 </span></span></code></pre></div><p>如果我们想定位<code>My Article</code>这个元素，则 xpath 的路径为<code>/body/div/div/div/h2</code>。可以看到 xpath 是一种类似面包屑导航的定位方式。</p>
 <h3 id="使用-chrome-获取-xpath">使用 Chrome 获取 xpath <a href="#%e4%bd%bf%e7%94%a8-chrome-%e8%8e%b7%e5%8f%96-xpath" class="anchor">🔗</a></h3><p>以我的博客为例，在 Chrome 中打开<a href="https://blog.lysoul.art/" target="_blank" rel="noopener">https://blog.lysoul.art/</a>，按下 Cmd/Ctrl + Shift + C，打开开发者工具的选取模式，点击博客列表中的标题，在页面右侧可以看到该元素在网页源码中的位置。</p>
 <p><p class="markdown-image">
@@ -272,19 +277,19 @@
 <li><code>.</code>点符号表示原样输出，会包含所有标签代码本身。</li>
 </ul>
 <p>完成配置后，我们用于抓取文章列表的 Website Agent 就编辑完成了，这里贴出 Option 的 JSON 代码以供参考：</p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>	<span style="color:#008000;font-weight:bold">&#34;expected_update_period_in_days&#34;</span>: <span style="color:#b44">&#34;2&#34;</span>,
-</span></span><span style="display:flex;"><span>	<span style="color:#008000;font-weight:bold">&#34;url&#34;</span>: <span style="color:#b44">&#34;https://blog.lysoul.art/&#34;</span>,
-</span></span><span style="display:flex;"><span>	<span style="color:#008000;font-weight:bold">&#34;type&#34;</span>: <span style="color:#b44">&#34;html&#34;</span>,
-</span></span><span style="display:flex;"><span>	<span style="color:#008000;font-weight:bold">&#34;mode&#34;</span>: <span style="color:#b44">&#34;on_change&#34;</span>,
-</span></span><span style="display:flex;"><span>	<span style="color:#008000;font-weight:bold">&#34;extract&#34;</span>: {
-</span></span><span style="display:flex;"><span>		<span style="color:#008000;font-weight:bold">&#34;url&#34;</span>: {
-</span></span><span style="display:flex;"><span>			<span style="color:#008000;font-weight:bold">&#34;xpath&#34;</span>: <span style="color:#b44">&#34;//*[@id=\&#34;list-page\&#34;]/section[*]/div[1]/h1/a&#34;</span>,
-</span></span><span style="display:flex;"><span>			<span style="color:#008000;font-weight:bold">&#34;value&#34;</span>: <span style="color:#b44">&#34;@href&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">&#34;expected_update_period_in_days&#34;</span>: <span style="color:#f1fa8c">&#34;2&#34;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">&#34;url&#34;</span>: <span style="color:#f1fa8c">&#34;https://blog.lysoul.art/&#34;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">&#34;type&#34;</span>: <span style="color:#f1fa8c">&#34;html&#34;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">&#34;mode&#34;</span>: <span style="color:#f1fa8c">&#34;on_change&#34;</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#ff79c6">&#34;extract&#34;</span>: {
+</span></span><span style="display:flex;"><span>		<span style="color:#ff79c6">&#34;url&#34;</span>: {
+</span></span><span style="display:flex;"><span>			<span style="color:#ff79c6">&#34;xpath&#34;</span>: <span style="color:#f1fa8c">&#34;//*[@id=\&#34;list-page\&#34;]/section[*]/div[1]/h1/a&#34;</span>,
+</span></span><span style="display:flex;"><span>			<span style="color:#ff79c6">&#34;value&#34;</span>: <span style="color:#f1fa8c">&#34;@href&#34;</span>
 </span></span><span style="display:flex;"><span>		},
-</span></span><span style="display:flex;"><span>		<span style="color:#008000;font-weight:bold">&#34;title&#34;</span>: {
-</span></span><span style="display:flex;"><span>			<span style="color:#008000;font-weight:bold">&#34;xpath&#34;</span>: <span style="color:#b44">&#34;//*[@id=\&#34;list-page\&#34;]/section[*]/div[1]/h1/a&#34;</span>,
-</span></span><span style="display:flex;"><span>			<span style="color:#008000;font-weight:bold">&#34;value&#34;</span>: <span style="color:#b44">&#34;string(.)&#34;</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#ff79c6">&#34;title&#34;</span>: {
+</span></span><span style="display:flex;"><span>			<span style="color:#ff79c6">&#34;xpath&#34;</span>: <span style="color:#f1fa8c">&#34;//*[@id=\&#34;list-page\&#34;]/section[*]/div[1]/h1/a&#34;</span>,
+</span></span><span style="display:flex;"><span>			<span style="color:#ff79c6">&#34;value&#34;</span>: <span style="color:#f1fa8c">&#34;string(.)&#34;</span>
 </span></span><span style="display:flex;"><span>		}
 </span></span><span style="display:flex;"><span>	}
 </span></span><span style="display:flex;"><span>}
@@ -319,15 +324,15 @@
 <p><p class="markdown-image">
   <img src="https://share.lysoul.art:39002/picture/202303201041737.png" alt="Untitled"  />
 </p></p>
-<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>  <span style="color:#008000;font-weight:bold">&#34;expected_update_period_in_days&#34;</span>: <span style="color:#b44">&#34;2&#34;</span>,
-</span></span><span style="display:flex;"><span>  <span style="color:#008000;font-weight:bold">&#34;url&#34;</span>: <span style="color:#b44">&#34;https://blog.lysoul.art{{ url }}&#34;</span>,
-</span></span><span style="display:flex;"><span>  <span style="color:#008000;font-weight:bold">&#34;type&#34;</span>: <span style="color:#b44">&#34;html&#34;</span>,
-</span></span><span style="display:flex;"><span>  <span style="color:#008000;font-weight:bold">&#34;mode&#34;</span>: <span style="color:#b44">&#34;merge&#34;</span>,
-</span></span><span style="display:flex;"><span>  <span style="color:#008000;font-weight:bold">&#34;extract&#34;</span>: {
-</span></span><span style="display:flex;"><span>    <span style="color:#008000;font-weight:bold">&#34;hovertext&#34;</span>: {
-</span></span><span style="display:flex;"><span>      <span style="color:#008000;font-weight:bold">&#34;xpath&#34;</span>: <span style="color:#b44">&#34;//*[@id=\&#34;single\&#34;]&#34;</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#008000;font-weight:bold">&#34;value&#34;</span>: <span style="color:#b44">&#34;.&#34;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;expected_update_period_in_days&#34;</span>: <span style="color:#f1fa8c">&#34;2&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;url&#34;</span>: <span style="color:#f1fa8c">&#34;https://blog.lysoul.art{{ url }}&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;type&#34;</span>: <span style="color:#f1fa8c">&#34;html&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;mode&#34;</span>: <span style="color:#f1fa8c">&#34;merge&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#ff79c6">&#34;extract&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">&#34;hovertext&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;xpath&#34;</span>: <span style="color:#f1fa8c">&#34;//*[@id=\&#34;single\&#34;]&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#ff79c6">&#34;value&#34;</span>: <span style="color:#f1fa8c">&#34;.&#34;</span>
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>  }
 </span></span><span style="display:flex;"><span>}
